@@ -1,7 +1,6 @@
 // App.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './App.css';
 
 function App() {
   const [users, setUsers] = useState([]);
@@ -14,7 +13,6 @@ function App() {
       .then(res => res.json())
       .then(data => setUsers(data));
   }, []);
-
   const handleShowPosts = (userId) => {
     if (selectedUserId === userId) {
       setSelectedUserId(null);
@@ -32,39 +30,33 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <h1>Utilisateurs & Posts</h1>
-      <div className="user-list">
+    <div className="container mt-4">
+      <h2>Utilisateurs & Posts</h2>
+      <ul className="list-group">
         {users.map(user => (
-          <div key={user.id} className="user-card">
-            <div className="user-info">
-              <h3>{user.name}</h3>
-              <p>{user.email}</p>
+          <li key={user.id} className="list-group-item">
+            <div className="d-flex justify-content-between align-items-center">
+              <span>{user.name}</span>
+              <button className="btn btn-primary btn-sm" onClick={() => handleShowPosts(user.id)}>
+                {selectedUserId === user.id ? 'Masquer les posts' : 'Afficher les posts'}
+              </button>
             </div>
-            <button
-              className="toggle-button"
-              onClick={() => handleShowPosts(user.id)}
-            >
-              {selectedUserId === user.id ? 'Masquer les posts' : 'Afficher les posts'}
-            </button>
-
             {selectedUserId === user.id && (
-              <div className="post-section">
+              <div className="mt-2">
                 {loadingPosts ? (
-                  <p className="loading">Chargement...</p>
+                  <p>Chargement...</p>
                 ) : (
-                  posts.map(post => (
-                    <div key={post.id} className="post-card">
-                      <h4>{post.title}</h4>
-                      <p>{post.body}</p>
-                    </div>
-                  ))
+                  <ul>
+                    {posts.map(post => (
+                      <li key={post.id}><strong>{post.title}</strong></li>
+                    ))}
+                  </ul>
                 )}
               </div>
             )}
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   );
 }
